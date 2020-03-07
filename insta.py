@@ -11,13 +11,15 @@ class myinsta():
         from InstagramAPI import InstagramAPI
         try:
             self.InstagramAPI = InstagramAPI(config['INSTAGRAM_LOGIN'], config['INSTAGRAM_PASSWORD'])
+            self.InstagramAPI.USER_AGENT = 'Instagram 10.34.0 Android (18/4.3; 320dpi; 720x1280; Xiaomi; HM 1SW; armani; qcom; en_US)'
             con = self.InstagramAPI.login()  # login
-            if con['status'] == 'fail':
-                logging.info('Echec de connection a Instagram :%s' % (con['error_type']))
-                self.connected = False
-            else:
+            if con == True:
                 logging.info('Connection a Instagram Ok ')
                 self.connected = True
+                
+            else:
+                logging.info('Echec de connection a Instagram :%s' % (con['error_type']))
+                self.connected = False
         except:
             logging.info('Erreur ')
             self.connected = False

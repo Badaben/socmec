@@ -7,10 +7,10 @@ class tweet():
         # Authenticate to Twitter
         auth = tweepy.OAuthHandler(
             config["TWITTER_CONSUMER_KEY"],
-            config["TWITER_CONSUMER_SECRET"]
+            config["TWITTER_CONSUMER_SECRET"]
         )
         
-        auth.set_access_token(config["TWITER_ACCESS_TOKEN"], config["TWITER_ ACCESS_TOKEN_SECRET"])
+        auth.set_access_token(config["TWITTER_ACCESS_TOKEN"], config['TWITTER_ACCESS_TOKEN_SECRET'])
         
         # Create API object
         self.api = tweepy.API(auth)
