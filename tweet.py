@@ -18,7 +18,7 @@ class tweet():
         try:
             self.api.verify_credentials()
             self.connected = True
-            logging.info('Connection Twitter OK')
+            logging.info('Connection Twitter OK :\n%s' % (self.api.me()))
         except:
             self.connected = False
             logging.info('Echec de connection a twitter')

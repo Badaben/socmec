@@ -87,12 +87,6 @@ class Beep():
                 }
             }
             
-#            for key in config.keys():
-#                print('### %s ' % (key))
-#                for key2 in config[key].keys():
-#                    print('%s' % (key2))
-#                    config[key][key2] = input('%s = (%s)' % (key2, config[key][key2]))
-            
             self.check_dirs(config)
             
             with open(config['paths']['conf_file'], 'w') as configfile:
@@ -201,7 +195,9 @@ class Beep():
         p = pintrst.mypint(self.config['pinterest'])
         posts = self.format_post(post)
         
-        if t.connected and i.connected and fb.connected and p.connected :
+        dry = True
+        
+        if t.connected and i.connected and fb.connected and p.connected and dry == False:
             # Twitter
             twit = t.send_post(posts['twitpost'])
             # Insta
@@ -210,6 +206,14 @@ class Beep():
             facebook = fb.send_post(posts['facebkpost'])
             # Pinsterest
             pinterest = p.send_post(posts['pintpost'])
+        elif dry == True:
+            logging.info('Dry mode : t=%s i=%s f=%s p=%s' % (
+                t.connected,
+                i.connected,
+                fb.connected,
+                p.connected
+                )
+            )
         else:
             logging.info('Connection failed : t=%s i=%s f=%s p=%s' % (
                 t.connected,

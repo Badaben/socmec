@@ -127,3 +127,20 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#eric6 project files
+.eric6project/
+*.e4p
+
+# remove config json file
+
+conf/facebook.json
+conf/config.json
+lockfile.json
+
+# remove img directory
+img/
+
+# remove __init__.py
+__init__.py
+.gitignore
