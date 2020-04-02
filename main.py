@@ -60,9 +60,9 @@ class Beep():
                 }, 
                 'twitter' : {
                     "TWITTER_CONSUMER_KEY" : '', 
-                    "TWITER_CONSUMER_SECRET" : '', 
-                    "TWITER_ACCESS_TOKEN" : '', 
-                    "TWITER_ ACCESS_TOKEN_SECRET" : '', 
+                    "TWITTER_CONSUMER_SECRET" : '', 
+                    "TWITTER_ACCESS_TOKEN" : '', 
+                    "TWITTER_ACCESS_TOKEN_SECRET" : '', 
                     "TWITTER_MESSAGE_HEAD" : '', 
                     "TWITTER_MESSAGE_TAIL" : '', 
                     "TWITTER_HASHTAGS" : ''
@@ -74,7 +74,6 @@ class Beep():
                     "INSTAGRAM_MESSAGE_TAIL" : '',                     
                 }, 
                 'facebook' : {
-                    'FACEBOOK_ACCESS_TOKEN' : '',
                     "FACEBOOK_MESSAGE_HEAD" : '', 
                     "FACEBOOK_MESSAGE_TAIL" : '',  
                 }, 
@@ -86,8 +85,48 @@ class Beep():
                     "PINTEREST_MESSAGE_TAIL" : '', 
                 }
             }
-            
-            self.check_dirs(config)
+#            print('Configuration manuelle du script\n')
+#            # populate config file
+#            for key in config.keys():
+#                
+#                if [  str(input('Configuration de %s y/N ?' % (key))) == 'y' ]:
+#                    
+#                    for item in config[key].keys():
+#                        ret = str(input('%s (%s)'%(item, config[key][item])))
+#                        if ret != '':
+#                            config[key][item] = ret
+                        
+            # check facebook config
+            if not os.path.isfile('conf/facebook.json'):
+                data = {
+                    "user": {
+                        "short_token": "add this manually",
+                        "long_token": "None"
+                    },
+                    "app": {
+                        "id": "add this manually",
+                        "secret": "add this manually"
+                    },
+                    "page": {
+                        "token": "None",
+                        "id": "add this manually"}
+                }
+
+    #            # Prompt user for credentials
+    #            data['user']['short_token'] = str(input("Enter facebook USER SHORT TOKEN : \n")).strip()
+    #            data['app']['id'] =  str(input("Enter faceboo APP ID : \n")).strip()
+    #            data['app']['secret'] =  str(input("Enter facebook APP SECRET : \n")).strip()
+    #            data['page']['id'] = str(input("Enter facebook PAGE ID : \n")).strip()
+                
+                #write configuration
+                with open('conf/facebook.json', 'w') as f:
+                    json.dump(data, f, indent=4)
+                self.check_dirs(config)
+                
+                # Print nice instructions to make it work
+                print('See https://medium.com/@DrGabrielHarris/python-how-making-facebook-api-calls-using-facebook-sdk-ea18bec973c8\
+                \n and follow the process to get a user short token, an app id, an app secret and your page id then use them \
+                to complete the facebook.json conf file')
             
             with open(config['paths']['conf_file'], 'w') as configfile:
                 configfile.write(json.dumps(config, indent=4))

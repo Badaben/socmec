@@ -2,7 +2,7 @@ import facebook
 import logging
 import requests
 import json
-
+import os
 
 class facebk():
     logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ class facebk():
         pass
     
     def tokens(self):
-   
+
         # open json file for reading
         with open('conf/facebook.json', 'r') as f:
             data = json.load(f)
@@ -43,10 +43,15 @@ class facebk():
 
         # get first long-lived user token
         if user_long_token == 'None':
-            user_long_token = requests.get(
-                "{}{}?grant_type=fb_exchange_token&client_id={}&client_secret={}&fb_exchange_token={}".format(
-                    host, endpoint, app_id, app_secret, user_short_token)).json()['access_token']
-
+            try:
+                user_long_token = requests.get(
+                    "{}{}?grant_type=fb_exchange_token&client_id={}&client_secret={}&fb_exchange_token={}".format(
+                        host, endpoint, app_id, app_secret, user_short_token)).json()['access_token']
+            except KeyError : 
+                # BAD SHORT TOKEN
+                print('Bad credential check your SHORT TOKEN')
+                user_short_token = str(input('user_short_token : (%s) ?'%(user_short_token)))
+                exit(1)
             # update value
             data['user']['long_token'] = user_long_token
             
