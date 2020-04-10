@@ -4,7 +4,7 @@ import json
 import logging
 
 class feeder():
-    logger = logging.getLogger(__name__)
+    #logger = logging.getLogger(__name__)
     def __init__(self):
         self.lockfile = 'lockfile.json'
         self.log_dir =''

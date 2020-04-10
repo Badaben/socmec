@@ -43,15 +43,30 @@ class facebk():
 
         # get first long-lived user token
         if user_long_token == 'None':
-            try:
-                user_long_token = requests.get(
-                    "{}{}?grant_type=fb_exchange_token&client_id={}&client_secret={}&fb_exchange_token={}".format(
-                        host, endpoint, app_id, app_secret, user_short_token)).json()['access_token']
-            except KeyError : 
-                # BAD SHORT TOKEN
-                print('Bad credential check your SHORT TOKEN')
-                user_short_token = str(input('user_short_token : (%s) ?'%(user_short_token)))
-                exit(1)
+            while True: 
+                try:
+                    user_long_token = requests.get(
+                        "{}{}?grant_type=fb_exchange_token&client_id={}&client_secret={}&fb_exchange_token={}".format(
+                            host, endpoint, app_id, app_secret, user_short_token)).json()['access_token']
+                    break
+                except KeyError : 
+                    # BAD SHORT TOKEN
+                    print('Bad facebook credentials check your USER SHORT TOKEN, APP ID,APP SECRET')
+                                    # Print nice instructions to make it work
+                    print('\n\nSee https://medium.com/@DrGabrielHarris/python-how-making-facebook-api-calls-using-facebook-sdk-ea18bec973c8\
+                \n and follow the process to get a user short token, an app id, an app secret and your page id then use them \
+                to complete the facebook.json conf file\n\n')
+
+                    ret = str(input('user_short_token : [%s] (Enter to keep actuel value)?'%(user_short_token)))
+                    if ret != '':
+                        user_short_token = ret
+                    ret = str(input('app_id : [%s] (Enter to keep actuel value)?'%(app_id)))
+                    if ret != '':
+                        app_id = ret
+                    ret = str(input('app_secret : [%s] (Enter to keep actuel value)?'%(app_secret)))
+                    if ret != '':
+                        app_secret = ret
+                        
             # update value
             data['user']['long_token'] = user_long_token
             

@@ -2,9 +2,8 @@ import json
 import logging
 import os
 import sys
-import pathlib
 import time
-
+import pathlib
 from lxml import html
 
 import facebk
@@ -31,8 +30,6 @@ class Beep():
                     logging.StreamHandler(sys.stdout)
                 ]
             )
-            
-            
         except:
             logging.basicConfig(
                 level=logging.INFO,
@@ -42,102 +39,98 @@ class Beep():
                 ]
             )
             
-            logging.info('First run, creating config file')
             base_dir =  pathlib.Path.cwd()
-            
-            config = { 
-                'main' : {
-                    'rss_url' : "http://cotesmeubles.fr/feed.php", 
-                    'time_sleep' : 10,  
-                    'base_dir' : str(base_dir)
-                }, 
-                'paths' : {
-                    'conf_dir' : str(base_dir.joinpath('conf')), 
-                    'conf_file' : str(base_dir.joinpath('conf').joinpath('config.json')), 
-                    'log_dir' : str(base_dir.joinpath('log')),
-                    'log_file' :  str(base_dir.joinpath('log').joinpath('Beep.log')),
-                    'img_dir' : str(base_dir.joinpath('img'))
-                }, 
-                'twitter' : {
-                    "TWITTER_CONSUMER_KEY" : '', 
-                    "TWITTER_CONSUMER_SECRET" : '', 
-                    "TWITTER_ACCESS_TOKEN" : '', 
-                    "TWITTER_ACCESS_TOKEN_SECRET" : '', 
-                    "TWITTER_MESSAGE_HEAD" : '', 
-                    "TWITTER_MESSAGE_TAIL" : '', 
-                    "TWITTER_HASHTAGS" : ''
-                }, 
-                'instagram' : {
-                    'INSTAGRAM_LOGIN' : '', 
-                    'INSTAGRAM_PASSWORD' : '', 
-                    "INSTAGRAM_MESSAGE_HEAD" : '', 
-                    "INSTAGRAM_MESSAGE_TAIL" : '',                     
-                }, 
-                'facebook' : {
-                    "FACEBOOK_MESSAGE_HEAD" : '', 
-                    "FACEBOOK_MESSAGE_TAIL" : '',  
-                }, 
-                'pinterest' : {
-                    'PINTEREST_APP_ID' : '', 
-                    'PINTEREST_REDIRECT_URI' : '', 
-                    'PINTEREST_ACCESS_TOKEN' : '', 
-                    "PINTEREST_MESSAGE_HEAD" : '', 
-                    "PINTEREST_MESSAGE_TAIL" : '', 
-                }
+            self.config = { 
+            'main' : {
+                'rss_url' : "http://cotesmeubles.fr/feed.php", 
+                'time_sleep' : 600,  
+                'base_dir' : str(base_dir)
+            }, 
+            'paths' : {
+                'conf_dir' : str(base_dir.joinpath('conf')), 
+                'conf_file' : str(base_dir.joinpath('conf').joinpath('config.json')), 
+                'log_dir' : str(base_dir.joinpath('log')),
+                'log_file' :  str(base_dir.joinpath('log').joinpath('Beep.log')),
+                'img_dir' : str(base_dir.joinpath('img'))
+            }, 
+            'twitter' : {
+                "TWITTER_CONSUMER_KEY" : '', 
+                "TWITTER_CONSUMER_SECRET" : '', 
+                "TWITTER_ACCESS_TOKEN" : '', 
+                "TWITTER_ACCESS_TOKEN_SECRET" : '', 
+                "TWITTER_MESSAGE_HEAD" : '', 
+                "TWITTER_MESSAGE_TAIL" : '', 
+                "TWITTER_HASHTAGS" : ''
+            }, 
+            'instagram' : {
+                'INSTAGRAM_LOGIN' : '', 
+                'INSTAGRAM_PASSWORD' : '', 
+                "INSTAGRAM_MESSAGE_HEAD" : '', 
+                "INSTAGRAM_MESSAGE_TAIL" : '',                     
+            }, 
+            'facebook' : {
+                "FACEBOOK_MESSAGE_HEAD" : '', 
+                "FACEBOOK_MESSAGE_TAIL" : '',  
+            }, 
+            'pinterest' : {
+                'PINTEREST_APP_ID' : '', 
+                'PINTEREST_REDIRECT_URI' : '', 
+                'PINTEREST_ACCESS_TOKEN' : '', 
+                "PINTEREST_MESSAGE_HEAD" : '', 
+                "PINTEREST_MESSAGE_TAIL" : '', 
             }
-#            print('Configuration manuelle du script\n')
-#            # populate config file
-#            for key in config.keys():
-#                
-#                if [  str(input('Configuration de %s y/N ?' % (key))) == 'y' ]:
-#                    
-#                    for item in config[key].keys():
-#                        ret = str(input('%s (%s)'%(item, config[key][item])))
-#                        if ret != '':
-#                            config[key][item] = ret
-                        
-            # check facebook config
-            if not os.path.isfile('conf/facebook.json'):
-                data = {
-                    "user": {
-                        "short_token": "add this manually",
-                        "long_token": "None"
-                    },
-                    "app": {
-                        "id": "add this manually",
-                        "secret": "add this manually"
-                    },
-                    "page": {
-                        "token": "None",
-                        "id": "add this manually"}
-                }
-
-    #            # Prompt user for credentials
-    #            data['user']['short_token'] = str(input("Enter facebook USER SHORT TOKEN : \n")).strip()
-    #            data['app']['id'] =  str(input("Enter faceboo APP ID : \n")).strip()
-    #            data['app']['secret'] =  str(input("Enter facebook APP SECRET : \n")).strip()
-    #            data['page']['id'] = str(input("Enter facebook PAGE ID : \n")).strip()
-                
-                #write configuration
-                with open('conf/facebook.json', 'w') as f:
-                    json.dump(data, f, indent=4)
-                self.check_dirs(config)
-                
-                # Print nice instructions to make it work
-                print('See https://medium.com/@DrGabrielHarris/python-how-making-facebook-api-calls-using-facebook-sdk-ea18bec973c8\
-                \n and follow the process to get a user short token, an app id, an app secret and your page id then use them \
-                to complete the facebook.json conf file')
-            
-            with open(config['paths']['conf_file'], 'w') as configfile:
-                configfile.write(json.dumps(config, indent=4))
-            
-            self.config = config
-            
-            exit(0)
+        }
+            self.check_dirs(self.config)
+            self.first_config(self.config)
             
         logging.info('Started')
         logging.info('Checking rss from %s' % (self.config['main']['rss_url']))
+    
+    def first_config(self, config):
         
+        logging.info('First run, creating config file')
+        
+        
+        print('Configuration manuelle du script\n\n')
+        doit = input('\tVoulez vous configurer le script manuellement y/N ?\n\
+        \t(Vous pouvez editer le fichier conf/config.json)')
+        
+        if doit == 'y|Y':
+            for key in config.keys():
+                
+                if str(key) != 'path' and str(input('Configuration de %s y/N ?' % (key))) == 'y' :
+                    for item in config[key].keys():
+                        ret = str(input('%s (%s)'%(item, config[key][item])))
+                        if ret != '':
+                            config[key][item] = ret
+        # check facebook config             
+        # populate config file
+        if not os.path.isfile('conf/facebook.json'):
+            data = {
+                "user": {
+                    "short_token": "add this manually",
+                    "long_token": "None"
+                },
+                "app": {
+                    "id": "add this manually",
+                    "secret": "add this manually"
+                },
+                "page": {
+                    "token": "None",
+                    "id": "add this manually"}
+            }
+            #write configuration
+            with open('conf/facebook.json', 'w') as f:
+                json.dump(data, f, indent=4)
+            
+        with open(config['paths']['conf_file'], 'w') as configfile:
+            configfile.write(json.dumps(config, indent=4))
+        
+        self.config = config
+        
+        print('Exiting, next launche will use configuration files (you need to edit), if errors occurs check file conf/config.json')
+        exit(0)    
+    
     def check_dirs(self, config):
         
         for key in config['paths'].keys():
